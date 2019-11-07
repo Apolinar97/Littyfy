@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "959653786658",
+    "firebase_url": "https://masterqueue-d4f02.firebaseio.com",
+    "project_id": "masterqueue-d4f02",
+    "storage_bucket": "masterqueue-d4f02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959653786658:android:bbc8c20febdb95a416867b",
+        "android_client_info": {
+          "package_name": "com.example.littyfy_v0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959653786658-j5patvue4mmar2csq3v1su9r7sjjpr8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.littyfy_v0",
+            "certificate_hash": "86d4cae8fb06818dff1ffac0e715fdb858babe44"
+          }
+        },
+        {
+          "client_id": "959653786658-acbml9a64r08job719luimgqqs2j7sl9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhQi9MwMM-buW7pjkpyKhZe91ZN8W_eX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959653786658-acbml9a64r08job719luimgqqs2j7sl9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
