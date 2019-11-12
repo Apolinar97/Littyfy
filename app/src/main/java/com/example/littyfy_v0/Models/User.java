@@ -1,4 +1,4 @@
-package Models;
+package com.example.littyfy_v0.Models;
 
 public class User {
     private String userName;

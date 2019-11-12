@@ -1,5 +1,8 @@
 
-package Models;
+package com.example.littyfy_v0.Models;
+
+import com.example.littyfy_v0.Models.Artist.Artist;
+import com.example.littyfy_v0.Models.Track.Track;
 
 import java.util.ArrayList;
 
