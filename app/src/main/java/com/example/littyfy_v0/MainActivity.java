@@ -1,10 +1,6 @@
 package com.example.littyfy_v0;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,14 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.littyfy_v0.Models.Track.LastFmTrack;
-import com.example.littyfy_v0.Services.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,13 +30,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -54,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference RoomRef;
 
 
-    private View mainView;
     private ArrayList<String> list_of_rooms = new ArrayList<>();
     private ListView list_view;
 
@@ -68,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
         RootRef = FirebaseDatabase.getInstance().getReference();
         RoomRef = FirebaseDatabase.getInstance().getReference().child("Rooms");
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        Toolbar mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Littyfy");
 
 
         InitializeFields();
-        RetrieveAndDisplayRooms();
+        RetrieveRooms();
 
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -92,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
     }
-
 
 
     @Override
@@ -222,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void RetrieveAndDisplayRooms()
+    private void RetrieveRooms()
     {
         RoomRef.addValueEventListener(new ValueEventListener() {
             @Override
