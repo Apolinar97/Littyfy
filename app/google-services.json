@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "959653786658-59fktq9o99ehm9u3gkvttno8bpab2a20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.littyfy_v0",
+            "certificate_hash": "eda82a3e3c14bdb34acd08f665a620b2466d6d10"
+          }
+        },
+        {
           "client_id": "959653786658-j5patvue4mmar2csq3v1su9r7sjjpr8f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
