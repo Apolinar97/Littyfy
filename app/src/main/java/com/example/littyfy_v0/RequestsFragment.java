@@ -12,6 +12,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
@@ -45,7 +47,7 @@ public class RequestsFragment extends Fragment {
         RequestList = requestFragmentView.findViewById(R.id.song_requests_list);
         RequestList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        songReqRef = FirebaseDatabase.getInstance().getReference().child("Rooms").child(roomName).child("Requests");
+        songReqRef = FirebaseDatabase.getInstance().getReference().child("Rooms").child(roomName);
 
         return requestFragmentView;
     }
@@ -56,7 +58,7 @@ public class RequestsFragment extends Fragment {
 
         FirebaseRecyclerOptions<SongInfo> options =
                 new FirebaseRecyclerOptions.Builder<SongInfo>()
-                        .setQuery(songReqRef, SongInfo.class)
+                        .setQuery(songReqRef.child("Requests"), SongInfo.class)
                         .build();
 
         FirebaseRecyclerAdapter<SongInfo, RequestsViewHolder> adapter =
@@ -71,9 +73,9 @@ public class RequestsFragment extends Fragment {
                     }
 
                     @Override
-                    protected void onBindViewHolder(@NonNull RequestsViewHolder requestsViewHolder, final int i, @NonNull SongInfo songInfo)
+                    protected void onBindViewHolder(@NonNull RequestsViewHolder requestsViewHolder, final int i, @NonNull final SongInfo songInfo)
                     {
-                        final DatabaseReference itemRef = songReqRef.child(getRef(i).getKey());
+                        final DatabaseReference itemRef = songReqRef.child("Requests").child(getRef(i).getKey());
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
@@ -81,6 +83,19 @@ public class RequestsFragment extends Fragment {
                         requestsViewHolder.deny.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                itemRef.setValue(null);
+                            }
+                        });
+
+                        requestsViewHolder.accept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String songKey = songReqRef.child("Queue").push().getKey();
+                                HashMap<String, Object> songInfoMap = new HashMap<>();
+                                songInfoMap.put("title", songInfo.getTitle());
+                                songInfoMap.put("artist", songInfo.getArtist());
+                                songReqRef.child("Queue").child(songKey).updateChildren(songInfoMap);
+
                                 itemRef.setValue(null);
                             }
                         });

@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".QueueFragment">
 
-    <ScrollView
-        android:id="@+id/fragment_queue_list"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/song_queue_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" >
-
-    </ScrollView>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>
