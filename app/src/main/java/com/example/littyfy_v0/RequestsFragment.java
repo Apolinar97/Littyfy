@@ -1,6 +1,7 @@
 package com.example.littyfy_v0;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,10 +21,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,13 +36,15 @@ import androidx.fragment.app.Fragment;
 public class RequestsFragment extends Fragment {
 
     private View requestFragmentView;
-    private ListView requestList;
-    private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> list_of_requests = new ArrayList<>();
+    private RecyclerView RequestList;
 
+    private final List<SongInfo> songList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private SongAdapter songAdapter;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference SongReqRef;
+    private DatabaseReference songReqRef;
+
+    private String songName, artistName, roomName;
 
     public RequestsFragment() {
         // Required empty public constructor
@@ -48,36 +57,52 @@ public class RequestsFragment extends Fragment {
         // Inflate the layout for this fragment
         requestFragmentView = inflater.inflate(R.layout.fragment_requests, container, false);
 
+
         RoomActivity roomActivity = (RoomActivity)getActivity();
+        roomName = roomActivity.roomName;
 
-        mAuth = FirebaseAuth.getInstance();
-        SongReqRef = FirebaseDatabase.getInstance().getReference().child("Rooms").child(roomActivity.roomName).child("Requests");
+        songAdapter = new SongAdapter(songList);
+        RequestList = requestFragmentView.findViewById(R.id.song_requests_list);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        RequestList.setLayoutManager(linearLayoutManager);
+        RequestList.setAdapter(songAdapter);
 
-        requestList = requestFragmentView.findViewById(R.id.request_list_view);
-        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_expandable_list_item_1, list_of_requests);
-        requestList.setAdapter(arrayAdapter);
+        songReqRef = FirebaseDatabase.getInstance().getReference().child("Rooms").child(roomName).child("Requests");
 
-        RetrieveRequests();
+        RequestList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return requestFragmentView;
     }
 
-    private void RetrieveRequests()
-    {
-        SongReqRef.addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        songReqRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                Set<String> set = new HashSet<>();
-                Iterator it = dataSnapshot.getChildren().iterator();
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                SongInfo songinfo = dataSnapshot.getValue(SongInfo.class);
 
-                while(it.hasNext())
-                {
-                    set.add(((DataSnapshot)it.next()).getKey());
-                }
+                songList.add(songinfo);
 
-                list_of_requests.clear();
-                list_of_requests.addAll(set);
+                songAdapter.notifyDataSetChanged();
+
+                RequestList.smoothScrollToPosition(RequestList.getAdapter().getItemCount());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -86,6 +111,4 @@ public class RequestsFragment extends Fragment {
             }
         });
     }
-
-
 }

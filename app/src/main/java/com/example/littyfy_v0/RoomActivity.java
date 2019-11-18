@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,6 +15,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -57,25 +60,41 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this, R.style.AlertDialog);
-                builder.setTitle("Enter Song Title");
+                builder.setTitle("Enter Track Info");
+
+
+                LinearLayout layout = new LinearLayout(RoomActivity.this);
+                layout.setOrientation(LinearLayout.VERTICAL);
 
                 final EditText songNameField = new EditText(RoomActivity.this);
-                songNameField.setHint("Artist - Title");
-                builder.setView(songNameField);
+                final EditText artistNameField = new EditText(RoomActivity.this);
 
-                builder.setPositiveButton("Create", new DialogInterface.OnClickListener()
+                songNameField.setHint("Track Name");
+                artistNameField.setHint("Artist Name");
+
+                layout.addView(songNameField);
+                layout.addView(artistNameField);
+                builder.setView(layout);
+
+                builder.setPositiveButton("Suggest", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String songTitle = songNameField.getText().toString();
+                        String artistName = artistNameField.getText().toString();
 
                         if (TextUtils.isEmpty(songTitle))
                         {
-                            Toast.makeText(RoomActivity.this, "Please enter class name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RoomActivity.this, "Please enter song title", Toast.LENGTH_SHORT).show();
+
+                            if (TextUtils.isEmpty(artistName))
+                            {
+                                Toast.makeText(RoomActivity.this, "Please enter artist name", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else
                         {
-                            PostSong(songTitle);
+                            PostSong(songTitle, artistName);
                         }
                     }
                 });
@@ -94,17 +113,13 @@ public class RoomActivity extends AppCompatActivity {
 
     }
 
-    private void PostSong(final String songName)
+    private void PostSong(final String songName, final String artistName)
     {
-        RootRef.child("Rooms").child(roomName).child("Requests").child(songName).setValue(songName)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(RoomActivity.this, songName + " was created successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        String songKey = RootRef.child("Rooms").child(roomName).child("Requests").push().getKey();
+        HashMap<String, Object> songInfoMap = new HashMap<>();
+        songInfoMap.put("title", songName);
+        songInfoMap.put("artist", artistName);
+
+        RootRef.child("Rooms").child(roomName).child("Requests").child(songKey).updateChildren(songInfoMap);
     }
 }
