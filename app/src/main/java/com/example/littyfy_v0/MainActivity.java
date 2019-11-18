@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Littyfy");
+        getSupportActionBar().setTitle("Littyfy Rooms");
 
 
         InitializeFields();
@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onStart();
 
+
+        RetrieveRooms();
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null)
         {
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("name").exists()) {
-
+                    RetrieveRooms();
                 } else {
                     SendUserToSettingsActivity();
                 }
