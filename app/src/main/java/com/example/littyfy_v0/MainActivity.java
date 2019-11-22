@@ -3,17 +3,23 @@ package com.example.littyfy_v0;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -24,16 +30,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.recyclerview.widget.DividerItemDecoration.HORIZONTAL;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,10 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private DatabaseReference RoomRef;
+    private String currentUserID;
+
+    private RecyclerView roomList;
+
+    String status = "default", picture = "default";
 
 
-    private ArrayList<String> list_of_rooms = new ArrayList<>();
-    private ListView list_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseApp.initializeApp(this);
+
         mAuth = FirebaseAuth.getInstance();
+
         RootRef = FirebaseDatabase.getInstance().getReference();
         RoomRef = FirebaseDatabase.getInstance().getReference().child("Rooms");
 
@@ -60,25 +75,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Littyfy Rooms");
 
-
-        InitializeFields();
-        RetrieveRooms();
-
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                String currentRoomName = parent.getItemAtPosition(position).toString();
-
-                Intent classChatIntent = new Intent(MainActivity.this, RoomActivity.class);
-                classChatIntent.putExtra("roomName", currentRoomName);
-                startActivity(classChatIntent);
-            }
-        });
-
-
-
-        FirebaseApp.initializeApp(this);
+        roomList = findViewById(R.id.room_recycler_view);
+        roomList.setLayoutManager(new LinearLayoutManager(this));
+        SeparatorDecoration decoration = new SeparatorDecoration(this, Color.GRAY, 1.5f);
+        roomList.addItemDecoration(decoration);
     }
 
 
@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onStart();
 
-
-        RetrieveRooms();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null)
@@ -102,22 +100,83 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void VerifyUserExists() {
-        String currentUserId = mAuth.getCurrentUser().getUid();
-        RootRef.child("Users").child(currentUserId).addValueEventListener(new ValueEventListener() {
+        currentUserID = mAuth.getCurrentUser().getUid();
+        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("name").exists()) {
-                    RetrieveRooms();
-                } else {
-                    SendUserToSettingsActivity();
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("status")) {
+                        status = dataSnapshot.child("status").getValue().toString();
+                    }
+                    if (dataSnapshot.hasChild("image")) {
+                        picture = dataSnapshot.child("image").getValue().toString();
+                    }
+                    if (dataSnapshot.child("name").exists()) {
+                        RetrieveRooms();
+                    } else {
+                        SendUserToSettingsActivity();
+                    }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+    }
+
+    private void RetrieveRooms()
+    {
+        FirebaseRecyclerOptions<RoomModel> options =
+                new FirebaseRecyclerOptions.Builder<RoomModel>()
+                        .setQuery(RoomRef, RoomModel.class)
+                        .build();
+
+        FirebaseRecyclerAdapter<RoomModel, RoomViewHolder> adapter =
+                new FirebaseRecyclerAdapter<RoomModel, RoomViewHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull RoomViewHolder roomViewHolder, int i, @NonNull final RoomModel roomModel) {
+                        roomViewHolder.roomViewName.setText(roomModel.getName());
+                        roomViewHolder.roomStatus.setText(roomModel.getStatus());
+                        Picasso.get().load(roomModel.getPicture()).placeholder(R.drawable.profile_image).into(roomViewHolder.roomImage);
+/*
+                        if (currentUserID != roomModel.getDj())
+                        {
+                            roomViewHolder.roomDeleteButton.setVisibility(View.INVISIBLE);
+                        }
+*/
+                        final DatabaseReference itemRef = RootRef.child("Rooms").child(getRef(i).getKey());
+
+                        roomViewHolder.roomDeleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                itemRef.setValue(null);
+                            }
+                        });
+
+
+                        roomViewHolder.roomLinearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String currentRoomName = roomModel.getName();
+                                Intent roomActivity = new Intent(MainActivity.this, RoomActivity.class);
+                                roomActivity.putExtra("roomName", currentRoomName);
+                                roomActivity.putExtra("dj", roomModel.getName());
+                                startActivity(roomActivity);
+                            }
+                        });
+                    }
+
+                    @NonNull
+                    @Override
+                    public RoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.room_display, parent, false);
+                        return new RoomViewHolder(view);
+                    }
+                };
+
+        roomList.setAdapter(adapter);
+        adapter.startListening();
     }
 
 
@@ -154,12 +213,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void InitializeFields()
-    {
-        list_view = (ListView) MainActivity.this.findViewById(R.id.list_view);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, list_of_rooms);
-        list_view.setAdapter(arrayAdapter);
-    }
 
     private void RequestNewRoom()
     {
@@ -209,34 +262,21 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        currentUserID = mAuth.getCurrentUser().getUid();
+
+
+
+        HashMap<String, Object> djInfoMap = new HashMap<>();
+        djInfoMap.put("dj", currentUserID);
+        djInfoMap.put("name", roomName);
+        djInfoMap.put("status", status);
+        djInfoMap.put("picture", picture);
+
+        RootRef.child("Rooms").child(roomName).updateChildren(djInfoMap);
     }
 
 
-    private void RetrieveRooms()
-    {
-        RoomRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                Set<String> set = new HashSet<>();
-                Iterator it = dataSnapshot.getChildren().iterator();
-
-                while(it.hasNext())
-                {
-                    set.add(((DataSnapshot)it.next()).getKey());
-                }
-
-                list_of_rooms.clear();
-                list_of_rooms.addAll(set);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-
-            }
-        });
-    }
 
 
     private void SendUserToSettingsActivity()
@@ -252,4 +292,25 @@ public class MainActivity extends AppCompatActivity {
         startActivity(loginIntent);
         finish();
     }
+
+
+    public static class RoomViewHolder extends RecyclerView.ViewHolder
+    {
+        public TextView roomViewName, roomStatus;
+        public ImageView roomImage;
+        public LinearLayout roomLinearLayout;
+        public ImageButton roomDeleteButton;
+
+        public RoomViewHolder(@NonNull View itemView)
+        {
+            super(itemView);
+
+            roomViewName = itemView.findViewById(R.id.room_name);
+            roomStatus = itemView.findViewById(R.id.room_status);
+            roomImage = itemView.findViewById(R.id.room_image);
+            roomLinearLayout = itemView.findViewById(R.id.room_layout);
+            roomDeleteButton = itemView.findViewById(R.id.room_delete_button);
+        }
+    }
+
 }

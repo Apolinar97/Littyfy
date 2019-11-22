@@ -1,6 +1,7 @@
 package com.example.littyfy_v0;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,8 +34,11 @@ public class QueueFragment extends Fragment {
 
     private RecyclerView RequestList;
 
+    private FirebaseAuth mAuth;
     private DatabaseReference songReqRef;
 
+    private String currentUserID;
+    private String dj;
 
 
     public QueueFragment() {
@@ -50,9 +55,15 @@ public class QueueFragment extends Fragment {
 
         RoomActivity roomActivity = (RoomActivity)getActivity();
         String roomName = roomActivity.roomName;
+        dj = roomActivity.dj;
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         RequestList = requestFragmentView.findViewById(R.id.song_queue_list);
         RequestList.setLayoutManager(new LinearLayoutManager(getContext()));
+        SeparatorDecoration decoration = new SeparatorDecoration(getContext(), Color.GRAY, 1.5f);
+        RequestList.addItemDecoration(decoration);
 
         songReqRef = FirebaseDatabase.getInstance().getReference().child("Rooms").child(roomName);
 
@@ -86,6 +97,12 @@ public class QueueFragment extends Fragment {
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
+
+                       /* if (currentUserID == dj)
+                        {
+                            requestsViewHolder.remove.setVisibility(View.INVISIBLE);
+                        }
+*/
 
                         requestsViewHolder.remove.setOnClickListener(new View.OnClickListener() {
                             @Override

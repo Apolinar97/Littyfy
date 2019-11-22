@@ -29,7 +29,7 @@ public class RoomActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
-    public String roomName;
+    public String roomName, dj;
 
     private FloatingActionButton suggestSong;
 
@@ -39,6 +39,7 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         roomName = getIntent().getExtras().get("roomName").toString();
+        dj = getIntent().getExtras().get("dj").toString();
 
         Toolbar mToolbar = findViewById(R.id.room_page_toolbar);
         setSupportActionBar(mToolbar);

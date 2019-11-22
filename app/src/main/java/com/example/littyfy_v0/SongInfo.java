@@ -2,9 +2,9 @@ package com.example.littyfy_v0;
 
 public class SongInfo {
 
-    private String title, artist, type;
+    private String title, artist;
 
-    private SongInfo () {}
+    public SongInfo () {}
 
 
     public SongInfo(String title, String artist) {

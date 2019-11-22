@@ -1,6 +1,7 @@
 package com.example.littyfy_v0;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,7 +29,12 @@ public class RequestsFragment extends Fragment {
 
     private RecyclerView RequestList;
 
+    private FirebaseAuth mAuth;
     private DatabaseReference songReqRef;
+
+    private String currentUserID;
+    private String dj;
+
 
     public RequestsFragment() {
         // Required empty public constructor
@@ -43,9 +50,15 @@ public class RequestsFragment extends Fragment {
 
         RoomActivity roomActivity = (RoomActivity)getActivity();
         String roomName = roomActivity.roomName;
+        dj = roomActivity.dj;
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         RequestList = requestFragmentView.findViewById(R.id.song_requests_list);
         RequestList.setLayoutManager(new LinearLayoutManager(getContext()));
+        SeparatorDecoration decoration = new SeparatorDecoration(getContext(), Color.GRAY, 1.5f);
+        RequestList.addItemDecoration(decoration);
 
         songReqRef = FirebaseDatabase.getInstance().getReference().child("Rooms").child(roomName);
 
@@ -79,7 +92,13 @@ public class RequestsFragment extends Fragment {
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
-
+/*
+                        if (currentUserID != dj)
+                        {
+                            requestsViewHolder.accept.setVisibility(View.INVISIBLE);
+                            requestsViewHolder.deny.setVisibility(View.INVISIBLE);
+                        }
+*/
                         requestsViewHolder.deny.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -92,7 +111,7 @@ public class RequestsFragment extends Fragment {
                             public void onClick(View view) {
                                 String songKey = songReqRef.child("Queue").push().getKey();
                                 HashMap<String, Object> songInfoMap = new HashMap<>();
-                                songInfoMap.put("title", songInfo.getTitle());
+                                songInfoMap.put("title", dj);
                                 songInfoMap.put("artist", songInfo.getArtist());
                                 songReqRef.child("Queue").child(songKey).updateChildren(songInfoMap);
 

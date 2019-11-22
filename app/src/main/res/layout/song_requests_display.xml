@@ -61,8 +61,7 @@
                     android:textSize="16sp"
                     android:textAllCaps="false"
                     android:background="@android:color/holo_red_light"
-                    android:visibility="visible"
-                    android:layout_marginLeft="15dp" />
+                    android:visibility="visible" />
 
             </LinearLayout>
 
