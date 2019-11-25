@@ -8,6 +8,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.littyfy_v0.Models.Artist.LastFmArtist;
+import com.example.littyfy_v0.Models.Track.LastFmTrack;
+import com.example.littyfy_v0.Models.Track.Track;
+import com.example.littyfy_v0.Services.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +27,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RoomActivity extends AppCompatActivity {
 
@@ -95,7 +105,35 @@ public class RoomActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            PostSong(songTitle, artistName);
+                            //TODO implemnt API interface here.
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl("http://ws.audioscrobbler.com/2.0/")
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build();
+                            Api api = retrofit.create(Api.class);
+                            Call<LastFmTrack> call = api.getTrack(artistName,songTitle, Api.API_KEY);
+                            call.enqueue(new Callback<LastFmTrack>() {
+                                @Override
+                                public void onResponse(Call<LastFmTrack> call, Response<LastFmTrack> response) {
+
+                                    if(response.body() != null) {
+                                        Track trackRef = response.body().getTrack();
+                                        PostSong(trackRef.getName(),trackRef.getArtist().getName());
+                                    }
+                                    return;
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<LastFmTrack> call, Throwable t) {
+
+                                    return;
+
+                                }
+                            });
+
+
+                            //PostSong(songTitle, artistName);
                         }
                     }
                 });
