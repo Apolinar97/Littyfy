@@ -96,7 +96,10 @@ public class RequestsFragment extends Fragment {
                         if (!currentUserID.equals(dj))
                         {
                             requestsViewHolder.accept.setVisibility(View.INVISIBLE);
+                            requestsViewHolder.deny.setVisibility(View.INVISIBLE);
+
                         } else {
+                            requestsViewHolder.accept.setVisibility(View.VISIBLE);
                             requestsViewHolder.deny.setVisibility(View.VISIBLE);
                         }
 

@@ -90,12 +90,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void InitializeFields()
     {
-        UpdateAccountSettings = (Button) findViewById(R.id.update_settings_button);
-        userName = (EditText) findViewById(R.id.set_user_name);
-        userStatus = (EditText) findViewById(R.id.set_profile_status);
-        userProfileImage = (CircleImageView) findViewById(R.id.set_profile_image);
+        UpdateAccountSettings = findViewById(R.id.update_settings_button);
+        userName = findViewById(R.id.set_user_name);
+        userStatus = findViewById(R.id.set_profile_status);
+        userProfileImage = findViewById(R.id.set_profile_image);
         loadingBar = new ProgressDialog(this);
-        SettingsToolbar = (Toolbar) findViewById(R.id.settings_toolbar);
+        SettingsToolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(SettingsToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -200,7 +200,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         else
         {
-            HashMap<String, Object> profileMap = new HashMap<>();;
+            HashMap<String, Object> profileMap = new HashMap<>();
             profileMap.put("uid", currentUserID);
             profileMap.put("name", setUserName);
             profileMap.put("status", setStatus);

@@ -38,7 +38,7 @@
         android:drawableStart="@drawable/edit_profile"
         android:drawableLeft="@drawable/edit_profile"
         android:hint="Username"
-        android:inputType="textMultiLine"
+        android:singleLine="true"
         android:padding="6dp"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark" />
