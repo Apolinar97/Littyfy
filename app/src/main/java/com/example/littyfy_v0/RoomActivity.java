@@ -3,6 +3,7 @@ package com.example.littyfy_v0;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -119,6 +120,7 @@ public class RoomActivity extends AppCompatActivity {
                                     if(response.body() != null) {
                                         Track trackRef = response.body().getTrack();
                                         PostSong(trackRef.getName(),trackRef.getArtist().getName());
+                                        //Log.e("STATUS CODE", Integer.toString(response.code()));
                                     }
                                     return;
 

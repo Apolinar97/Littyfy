@@ -8,6 +8,7 @@
 
 package com.example.littyfy_v0.Models.Track;
 
+import com.example.littyfy_v0.Models.Album.Album;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,6 +16,7 @@ public class LastFmTrack {
     @SerializedName("track")
     @Expose
     private Track track;
+
 
     public Track getTrack() {
         return track;
