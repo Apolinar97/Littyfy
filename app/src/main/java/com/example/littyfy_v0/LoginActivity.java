@@ -1,6 +1,7 @@
 package com.example.littyfy_v0;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity
@@ -57,6 +59,49 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 UserLogin();
+            }
+        });
+
+        ForgetPasswordLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this, R.style.AlertDialog);
+                builder.setTitle("Enter Email Address");
+
+                final EditText emailField = new EditText(LoginActivity.this);
+                emailField.setHint("user@example.com");
+                builder.setView(emailField);
+
+                builder.setPositiveButton("Send", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String email = emailField.getText().toString();
+
+                        if (TextUtils.isEmpty(email))
+                        {
+                            Toast.makeText(LoginActivity.this, "Please enter email", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(LoginActivity.this, "Sent Password Reset Email", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
 
@@ -125,10 +170,11 @@ public class LoginActivity extends AppCompatActivity
 
     private void InitializeFields()
     {
-        LoginButton = (Button) findViewById(R.id.login_button);
-        UserEmail = (EditText) findViewById(R.id.login_email);
-        UserPassword = (EditText) findViewById(R.id.login_password);
-        CreateAccountLink = (TextView) findViewById(R.id.create_account_link);
+        LoginButton = findViewById(R.id.login_button);
+        UserEmail = findViewById(R.id.login_email);
+        UserPassword = findViewById(R.id.login_password);
+        CreateAccountLink = findViewById(R.id.create_account_link);
+        ForgetPasswordLink = findViewById(R.id.forget_password_link);
         loadingBar = new ProgressDialog(this);
     }
 
