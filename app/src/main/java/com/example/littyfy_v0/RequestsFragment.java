@@ -92,13 +92,14 @@ public class RequestsFragment extends Fragment {
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
-/*
-                        if (currentUserID != dj)
+
+                        if (!currentUserID.equals(dj))
                         {
                             requestsViewHolder.accept.setVisibility(View.INVISIBLE);
-                            requestsViewHolder.deny.setVisibility(View.INVISIBLE);
+                        } else {
+                            requestsViewHolder.deny.setVisibility(View.VISIBLE);
                         }
-*/
+
                         requestsViewHolder.deny.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

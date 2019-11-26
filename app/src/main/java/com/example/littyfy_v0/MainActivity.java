@@ -139,12 +139,14 @@ public class MainActivity extends AppCompatActivity {
                         roomViewHolder.roomViewName.setText(roomModel.getName());
                         roomViewHolder.roomStatus.setText(roomModel.getStatus());
                         Picasso.get().load(roomModel.getPicture()).placeholder(R.drawable.profile_image).into(roomViewHolder.roomImage);
-/*
-                        if (currentUserID != roomModel.getDj())
+
+                        if (!currentUserID.equals(roomModel.getDj()))
                         {
                             roomViewHolder.roomDeleteButton.setVisibility(View.INVISIBLE);
+                        } else {
+                            roomViewHolder.roomDeleteButton.setVisibility(View.VISIBLE);
                         }
-*/
+
                         final DatabaseReference itemRef = RootRef.child("Rooms").child(getRef(i).getKey());
 
                         roomViewHolder.roomDeleteButton.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                                 String currentRoomName = roomModel.getName();
                                 Intent roomActivity = new Intent(MainActivity.this, RoomActivity.class);
                                 roomActivity.putExtra("roomName", currentRoomName);
-                                roomActivity.putExtra("dj", roomModel.getName());
+                                roomActivity.putExtra("dj", roomModel.getDj());
                                 startActivity(roomActivity);
                             }
                         });

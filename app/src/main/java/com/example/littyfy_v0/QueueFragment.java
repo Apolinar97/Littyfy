@@ -98,11 +98,13 @@ public class QueueFragment extends Fragment {
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
 
-                       /* if (currentUserID == dj)
+                        if (!currentUserID.equals(dj))
                         {
                             requestsViewHolder.remove.setVisibility(View.INVISIBLE);
+                        } else {
+                            requestsViewHolder.remove.setVisibility(View.VISIBLE);
                         }
-*/
+
 
                         requestsViewHolder.remove.setOnClickListener(new View.OnClickListener() {
                             @Override
