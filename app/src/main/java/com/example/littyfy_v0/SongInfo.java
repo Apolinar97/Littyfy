@@ -18,13 +18,13 @@ public class SongInfo {
         return title;
     }
 
-    public String getTrackImageURL() {return url;}
+    public String getUrl() {return url;}
 
     public void setFrom(String title) {
         this.title = title;
     }
 
-    public void setTrackImageURL(String url) {this.url = url;}
+    public void setUrl(String url) {this.url = url;}
 
     public String getArtist() {
         return artist;

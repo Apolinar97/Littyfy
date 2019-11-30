@@ -3,8 +3,7 @@ package com.example.littyfy_v0;
 
 import android.graphics.Color;
 import android.os.Bundle;
-<<<<<<< HEAD
-=======
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
->>>>>>> wik/api_integration
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +24,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -104,6 +103,10 @@ public class QueueFragment extends Fragment {
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
+                        //Log.d("URL TEST", songInfo.getUrl());
+
+                        Picasso.get().load(songInfo.getUrl()).into(requestsViewHolder.imgViewTrack);
+
 
                         if (!currentUserID.equals(dj))
                         {
@@ -111,7 +114,6 @@ public class QueueFragment extends Fragment {
                         } else {
                             requestsViewHolder.remove.setVisibility(View.VISIBLE);
                         }
-                        // TODO: Use PICCASSO HERE.
 
 
 
