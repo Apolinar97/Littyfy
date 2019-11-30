@@ -1,6 +1,7 @@
 
 package com.example.littyfy_v0.Models.Track;
 
+import com.example.littyfy_v0.Models.Album.Album;
 import com.example.littyfy_v0.Models.Artist.Artist;
 import com.example.littyfy_v0.Models.Artist.LastFmArtist;
 import com.google.gson.annotations.Expose;
@@ -24,6 +25,19 @@ public class Track {
     @SerializedName("artist")
     @Expose
     Artist artist;
+
+    @SerializedName("album")
+    @Expose
+    private Album album;
+
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
 
     public String getName() {
         return name;

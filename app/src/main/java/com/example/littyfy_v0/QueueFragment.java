@@ -3,10 +3,22 @@ package com.example.littyfy_v0;
 
 import android.graphics.Color;
 import android.os.Bundle;
+<<<<<<< HEAD
+=======
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+>>>>>>> wik/api_integration
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -99,6 +111,9 @@ public class QueueFragment extends Fragment {
                         } else {
                             requestsViewHolder.remove.setVisibility(View.VISIBLE);
                         }
+                        // TODO: Use PICCASSO HERE.
+
+
 
 
                         requestsViewHolder.remove.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +135,7 @@ public class QueueFragment extends Fragment {
     {
         public TextView songTitleText, artistNameText;
         public ImageButton remove;
+        public ImageView imgViewTrack;
 
         public RequestsViewHolder(@NonNull View itemView)
         {
@@ -128,6 +144,7 @@ public class QueueFragment extends Fragment {
             remove = itemView.findViewById(R.id.queue_delete_button);
             songTitleText = itemView.findViewById(R.id.queue_song_name);
             artistNameText = itemView.findViewById(R.id.queue_artist_name);
+            imgViewTrack = itemView.findViewById(R.id.imgview_track);
         }
     }
 }

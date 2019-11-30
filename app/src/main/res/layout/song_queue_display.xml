@@ -40,6 +40,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/imgview_track"
+            android:layout_width="88dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.798"
+            app:layout_constraintStart_toStartOf="@+id/queue_song_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/login_photo"
+            tools:srcCompat="@tools:sample/avatars" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -53,5 +65,11 @@
         android:baselineAligned="false"
         android:visibility="visible"
         app:srcCompat="@drawable/ic_delete_black_24dp" />
+
+
+
+
+
+
 
 </RelativeLayout>

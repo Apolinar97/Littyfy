@@ -117,6 +117,9 @@ public class RequestsFragment extends Fragment {
                                 HashMap<String, Object> songInfoMap = new HashMap<>();
                                 songInfoMap.put("title", songInfo.getTitle());
                                 songInfoMap.put("artist", songInfo.getArtist());
+                                songInfoMap.put("url", "test");
+
+
                                 songReqRef.child("Queue").child(songKey).updateChildren(songInfoMap);
 
                                 itemRef.setValue(null);
