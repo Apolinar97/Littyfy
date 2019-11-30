@@ -111,8 +111,11 @@ public class RequestsFragment extends Fragment {
                             public void onClick(View view) {
                                 String songKey = songReqRef.child("Queue").push().getKey();
                                 HashMap<String, Object> songInfoMap = new HashMap<>();
-                                songInfoMap.put("title", dj);
+                                songInfoMap.put("title", songInfo.getTitle());
                                 songInfoMap.put("artist", songInfo.getArtist());
+                                songInfoMap.put("url", "test");
+
+
                                 songReqRef.child("Queue").child(songKey).updateChildren(songInfoMap);
 
                                 itemRef.setValue(null);

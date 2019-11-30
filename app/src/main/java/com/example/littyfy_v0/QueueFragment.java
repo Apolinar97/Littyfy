@@ -10,10 +10,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -98,11 +100,9 @@ public class QueueFragment extends Fragment {
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
 
-                       /* if (currentUserID == dj)
-                        {
-                            requestsViewHolder.remove.setVisibility(View.INVISIBLE);
-                        }
-*/
+                        // TODO: Use PICCASSO HERE.
+
+
 
                         requestsViewHolder.remove.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -123,6 +123,7 @@ public class QueueFragment extends Fragment {
     {
         public TextView songTitleText, artistNameText;
         public ImageButton remove;
+        public ImageView imgViewTrack;
 
         public RequestsViewHolder(@NonNull View itemView)
         {
@@ -131,6 +132,7 @@ public class QueueFragment extends Fragment {
             remove = itemView.findViewById(R.id.queue_delete_button);
             songTitleText = itemView.findViewById(R.id.queue_song_name);
             artistNameText = itemView.findViewById(R.id.queue_artist_name);
+            imgViewTrack = itemView.findViewById(R.id.imgview_track);
         }
     }
 }

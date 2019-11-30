@@ -1,11 +1,13 @@
 package com.example.littyfy_v0;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import com.example.littyfy_v0.Models.Artist.LastFmArtist;
 import com.example.littyfy_v0.Models.Track.LastFmTrack;
 import com.example.littyfy_v0.Models.Track.Track;
 import com.example.littyfy_v0.Services.Api;
+import com.example.littyfy_v0.Services.ImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,6 +23,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -41,6 +45,7 @@ public class RoomActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     public String roomName, dj;
+    public ImageView trackImageView;
 
     private FloatingActionButton suggestSong;
 
@@ -51,6 +56,7 @@ public class RoomActivity extends AppCompatActivity {
 
         roomName = getIntent().getExtras().get("roomName").toString();
         dj = getIntent().getExtras().get("dj").toString();
+        trackImageView = findViewById(R.id.imgview_track);
 
         Toolbar mToolbar = findViewById(R.id.room_page_toolbar);
         setSupportActionBar(mToolbar);
@@ -106,7 +112,7 @@ public class RoomActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            //TODO implemnt API interface here.
+                            //TODO implement API interface here.
                             Retrofit retrofit = new Retrofit.Builder()
                                     .baseUrl("http://ws.audioscrobbler.com/2.0/")
                                     .addConverterFactory(GsonConverterFactory.create())
@@ -117,10 +123,20 @@ public class RoomActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<LastFmTrack> call, Response<LastFmTrack> response) {
 
-                                    if(response.body() != null) {
+                                    if(response.body() != null && response.code() == 200) {
                                         Track trackRef = response.body().getTrack();
-                                        PostSong(trackRef.getName(),trackRef.getArtist().getName());
-                                        //Log.e("STATUS CODE", Integer.toString(response.code()));
+
+                                        ImageLoader imageLoader = new ImageLoader();
+
+                                        String imageUrl = imageLoader.getSmallImage(response.body()
+                                                .getTrack().getAlbum().getImages());
+
+                                        Log.d("IMAGE URL", imageUrl);
+
+
+                                        PostSong(trackRef.getName(),trackRef.getArtist().getName(),imageUrl);
+
+
                                     }
                                     return;
 
@@ -154,12 +170,13 @@ public class RoomActivity extends AppCompatActivity {
 
     }
 
-    private void PostSong(final String songName, final String artistName)
+    private void PostSong(final String songName, final String artistName, final String trackImageURL)
     {
         String songKey = RootRef.child("Rooms").child(roomName).child("Requests").push().getKey();
         HashMap<String, Object> songInfoMap = new HashMap<>();
         songInfoMap.put("title", songName);
         songInfoMap.put("artist", artistName);
+        songInfoMap.put("url", trackImageURL);
 
         RootRef.child("Rooms").child(roomName).child("Requests").child(songKey).updateChildren(songInfoMap);
     }
