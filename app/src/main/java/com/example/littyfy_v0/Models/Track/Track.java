@@ -30,6 +30,17 @@ public class Track {
     @Expose
     private Album album;
 
+    @SerializedName("error")
+    @Expose
+    private int error;
+
+    public int getError() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error = error;
+    }
 
     public Album getAlbum() {
         return album;
