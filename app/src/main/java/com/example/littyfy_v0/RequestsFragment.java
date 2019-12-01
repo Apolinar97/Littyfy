@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -13,6 +14,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -92,6 +94,7 @@ public class RequestsFragment extends Fragment {
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
+                        Picasso.get().load(songInfo.getUrl()).into(requestsViewHolder.imgViewTrack);
 
                         if (!currentUserID.equals(dj))
                         {
@@ -138,6 +141,7 @@ public class RequestsFragment extends Fragment {
     {
         public TextView songTitleText, artistNameText;
         public AppCompatButton accept, deny;
+        public ImageView imgViewTrack;
 
         public RequestsViewHolder(@NonNull View itemView)
         {
@@ -147,6 +151,7 @@ public class RequestsFragment extends Fragment {
             artistNameText = itemView.findViewById(R.id.request_artist_name);
             accept = itemView.findViewById(R.id.request_accept_button);
             deny = itemView.findViewById(R.id.request_decline_button);
+            imgViewTrack = itemView.findViewById(R.id.req_imgview_track);
         }
     }
 }
