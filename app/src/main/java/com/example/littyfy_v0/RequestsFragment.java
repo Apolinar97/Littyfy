@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.littyfy_v0.Services.ImageLoader;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,10 +92,11 @@ public class RequestsFragment extends Fragment {
                     protected void onBindViewHolder(@NonNull RequestsViewHolder requestsViewHolder, final int i, @NonNull final SongInfo songInfo)
                     {
                         final DatabaseReference itemRef = songReqRef.child("Requests").child(getRef(i).getKey());
+                        ImageLoader imageLoader = new ImageLoader();
 
                         requestsViewHolder.songTitleText.setText(songInfo.getTitle());
                         requestsViewHolder.artistNameText.setText(songInfo.getArtist());
-                        Picasso.get().load(songInfo.getUrl()).into(requestsViewHolder.imgViewTrack);
+                        imageLoader.loadImage(songInfo.getUrl(), requestsViewHolder.imgViewTrack);
 
                         if (!currentUserID.equals(dj))
                         {
