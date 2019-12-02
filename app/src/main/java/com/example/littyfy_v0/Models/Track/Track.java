@@ -3,7 +3,6 @@ package com.example.littyfy_v0.Models.Track;
 
 import com.example.littyfy_v0.Models.Album.Album;
 import com.example.littyfy_v0.Models.Artist.Artist;
-import com.example.littyfy_v0.Models.Artist.LastFmArtist;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -1,10 +1,11 @@
 
 package com.example.littyfy_v0.Services;
+
 import com.example.littyfy_v0.Models.Artist.LastFmArtist;
 import com.example.littyfy_v0.Models.Track.LastFmTrack;
 
-import retrofit2.http.GET;
 import retrofit2.Call;
+import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface Api {

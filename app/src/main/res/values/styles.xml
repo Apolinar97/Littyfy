@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#2a75ed</item>
-        <item name="colorPrimaryDark">#2940ed</item>
-        <item name="colorAccent">#4286f4</item>
+        <item name="colorPrimary">#1FC900</item>
+        <item name="colorPrimaryDark">#18AD00</item>
+        <item name="colorAccent">#25E400</item>
     </style>
 
 
@@ -18,7 +18,7 @@
 
     <style name="AppTheme.TextFloatLabelAppearance" parent="TextAppearance.Design.Hint">
         <!-- Floating label appearance here -->
-        <item name="android:textColor">#4286f4</item>
+        <item name="android:textColor">#1FC900</item>
         <item name="android:textSize">20sp</item>
     </style>
 
